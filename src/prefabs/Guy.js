@@ -4,7 +4,9 @@ class Guy extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this)
         scene.physics.add.existing(this)
 
-        this.body.setSize(this.width / 2, this.height /2)
+        this.setScale(2)
+
+        this.body.setSize(this.width/2, this.height/2)
         this.body.setCollideWorldBounds(true)
 
         //character properties

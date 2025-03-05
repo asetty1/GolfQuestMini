@@ -21,12 +21,18 @@ class Map extends Phaser.Scene {
         this.add.image(0, 0, 'map').setOrigin(0);
 
         // Add player to the map scene
-        this.hero = new Guy(this, 200, 150, 'hero', 0, 'down')
-        this.guyFSM = this.hero.scene.guyFSM;
+        this.ace = new Guy(this, 1000, 1000, 'hero', 0, 'down')
+        this.lina = this.physics.add.sprite(1000, 1100, 'hero', 0)
+        //this.lina.body.setVelocity(90, 90)
+        //new Guy(this, 1000, 1100, 'hero', 0, 'down')
+        
+        this.lina.setTint(0xff0000)
+
+        this.guyFSM = this.ace.scene.guyFSM;
 
         // set up camera
         this.cameras.main.setBounds(0, 0, this.map.width, this.map.height)
-        this.cameras.main.startFollow(this.hero, false, 0.5, 0.5)
+        this.cameras.main.startFollow(this.ace, false, 0.5, 0.5)
         this.physics.world.setBounds(0, 0, 1733, 1158) //HARDCODED VALUES HERE ------------------
 
         // setup keyboard input
@@ -39,9 +45,21 @@ class Map extends Phaser.Scene {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
             this.physics.world.debugGraphic.clear()
         }, this)
+
+        this.physics.add.collider(this.lina, this.ace, (lina, ace) => {
+            lina.body.setVelocity(0, 0);
+            ace.body.setVelocity(0, 0);
+        })
     }
 
     update() {
-        this.guyFSM.step()
+        this.guyFSM.step();
+    
+        // Check if Lina and Ace are overlapping
+        if (!this.physics.overlap(this.lina, this.ace)) {
+            this.physics.moveToObject(this.lina, this.ace, 90, 1000);
+        } else {
+            this.lina.body.setVelocity(0, 0);
+        }
     }
 }
