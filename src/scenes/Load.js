@@ -10,7 +10,7 @@ class Load extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 32,
         })
-        this.load.image('map', 'map-scroll.jpg')
+        this.load.image('map', 'mapbase.png')
     }
 
     create() {
@@ -77,6 +77,6 @@ class Load extends Phaser.Scene {
         })
 
         // proceed once loading completes
-        this.scene.start('playScene')
+        this.scene.start('titleScene')
     }
 }

@@ -2,9 +2,9 @@ class Guy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame, direction) {
         super(scene, x, y, texture, frame)
         scene.add.existing(this)
-        scene.Physics.add.existing(this)
+        scene.physics.add.existing(this)
 
-        this.enableBody.setSize(this.width / 2, this.height /2)
+        this.body.setSize(this.width / 2, this.height /2)
         this.body.setCollideWorldBounds(true)
 
         //character properties
@@ -97,7 +97,7 @@ class MoveState extends State {
         }
         // normalize movement vector, update guy position, and play proper animation
         moveDirection.normalize()
-        guy.setVelocity(guy.guyVelocity * moveDirection.x, guy.guyVelocity * moveDirection.y)
+        guy.setVelocity(guy.velo * moveDirection.x, guy.velo * moveDirection.y)
         guy.anims.play(`walk-${guy.direction}`, true)
     }
 }

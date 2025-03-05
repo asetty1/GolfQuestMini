@@ -7,7 +7,7 @@ class Map extends Phaser.Scene {
         this.load.path = "./assets/";
 
         // map assets
-        this.load.image('map', 'mapbase.png');
+        this.map = this.load.image('map', 'mapbase.png');
 
         // character assets
         this.load.spritesheet("ace-walkf", "ace-walkf.png", {
@@ -21,28 +21,27 @@ class Map extends Phaser.Scene {
         this.add.image(0, 0, 'map').setOrigin(0);
 
         // Add player to the map scene
-        this.player = this.physics.add.sprite(100, 100, "ace-front");
+        this.hero = new Guy(this, 200, 150, 'hero', 0, 'down')
+        this.guyFSM = this.hero.scene.guyFSM;
 
-        this.anims.create({
-            key: "walk",
-            frames: this.anims.generateFrameNumbers("ace-walkf", { start: 0, end: 1 }),
-            frameRate: 10,
-            repeat: -1
-        });
+        // set up camera
+        this.cameras.main.setBounds(0, 0, this.map.width, this.map.height)
+        this.cameras.main.startFollow(this.hero, false, 0.5, 0.5)
+        this.physics.world.setBounds(0, 0, this.map.width, this.map.height)
 
-        this.cursors = this.input.keyboard.createCursorKeys();
+        // setup keyboard input
+        this.keys = this.input.keyboard.createCursorKeys()
+        this.keys.HKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H)
+        this.keys.FKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
+
+        // debug key listener (assigned to D key)
+        this.input.keyboard.on('keydown-D', function() {
+            this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
+            this.physics.world.debugGraphic.clear()
+        }, this)
     }
 
     update() {
-        if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-160);
-            this.player.anims.play("walk", true);
-        } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(160);
-            this.player.anims.play("walk", true);
-        } else {
-            this.player.setVelocityX(0);
-            this.player.setTexture("ace-front");
-        }
+        this.guyFSM.step()
     }
 }
