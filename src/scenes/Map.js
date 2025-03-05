@@ -27,7 +27,7 @@ class Map extends Phaser.Scene {
         // set up camera
         this.cameras.main.setBounds(0, 0, this.map.width, this.map.height)
         this.cameras.main.startFollow(this.hero, false, 0.5, 0.5)
-        this.physics.world.setBounds(0, 0, this.map.width, this.map.height)
+        this.physics.world.setBounds(0, 0, 1733, 1158) //HARDCODED VALUES HERE ------------------
 
         // setup keyboard input
         this.keys = this.input.keyboard.createCursorKeys()
