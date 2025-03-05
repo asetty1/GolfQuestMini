@@ -25,7 +25,7 @@ class Map extends Phaser.Scene {
         course.body.debugShowBody = true;
         course.body.debugBodyColor = 0x00ff00;
 
-        // Add player to the map scene
+        // Add player to the map scene`
         this.lina = new Guy(this, 1000, 1100, 'hero', 0, 'down', false)
         this.ace = new Guy(this, 1500, 1000, 'hero', 0, 'down', true)
 

@@ -6,7 +6,7 @@ class Guy extends Phaser.Physics.Arcade.Sprite {
 
         this.isAce = isAce
 
-        this.setScale(2)
+        this.setScale(0.5)
 
         this.body.setSize(this.width/2, this.height/2)
         this.body.setCollideWorldBounds(true)
@@ -19,8 +19,7 @@ class Guy extends Phaser.Physics.Arcade.Sprite {
         scene.guyFSM = new StateMachine('idle', {
             idle: new IdleState(),
             move: new MoveState(),
-            swing: new SwingState(),
-            circular: new CircularState(),
+            swing: new SwingState()
         }, [scene, this])
     }
 }
@@ -120,12 +119,3 @@ class SwingState extends State {
     }
 }
 
-class CircularState extends State {
-    enter(scene, guy) {
-        if(!guy.isAce) return
-        guy.body.setVelocity(0)
-        guy.anims.play('circular-attack').once('animationcomplete', () => {
-            this.stateMachine.transition('idle')
-        })
-    }
-}
