@@ -1,8 +1,10 @@
 class Guy extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, texture, frame, direction) {
+    constructor(scene, x, y, texture, frame, direction, isAce = true) {
         super(scene, x, y, texture, frame)
         scene.add.existing(this)
         scene.physics.add.existing(this)
+
+        this.isAce = isAce
 
         this.setScale(2)
 
@@ -31,6 +33,8 @@ class IdleState extends State {
     }
 
     execute(scene, guy) {
+        console.log(`Guy: ${guy.texture.key}, isAce: ${guy.isAce}`);
+        if(!guy.isAce) return
         // use destructuring to make a local copy of the keyboard object
         const { left, right, up, down, space, shift } = scene.keys
         const HKey = scene.keys.HKey
@@ -58,6 +62,7 @@ class IdleState extends State {
 
 class MoveState extends State {
     execute(scene, guy) {
+        if(!guy.isAce) return
         // use destructuring to make a local copy of the keyboard object
         const { left, right, up, down, space, shift } = scene.keys
         const HKey = scene.keys.HKey
@@ -106,6 +111,7 @@ class MoveState extends State {
 
 class SwingState extends State {
     enter(scene, guy) {
+        if(!guy.isAce) return
         guy.setVelocity(0)
         guy.anims.play(`swing-${guy.direction}`)
         guy.once('animationcomplete', () => {
@@ -116,6 +122,7 @@ class SwingState extends State {
 
 class CircularState extends State {
     enter(scene, guy) {
+        if(!guy.isAce) return
         guy.body.setVelocity(0)
         guy.anims.play('circular-attack').once('animationcomplete', () => {
             this.stateMachine.transition('idle')

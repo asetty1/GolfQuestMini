@@ -7,7 +7,8 @@ let config = {
     physics: {
         default: "arcade",
         arcade: {
-            debug: true
+            debug: true,
+            debugShowStaticBody: true
         }
     },
     scene: [ Load, Title, Map ]
