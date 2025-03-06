@@ -17,7 +17,7 @@ class Title extends Phaser.Scene {
     }
 
     create() {
-        this.add.image(0, 0, 'loadscreen').setOrigin(0);
+        this.add.image(0, 0, 'loadscreen').setOrigin(0).setScale(0.5);
         //this.add.Text(centerX, centerY, 'arial', 'Press SPACE to start', 16).setOrigin(0.5)
         this.cursors = this.input.keyboard.createCursorKeys();
     }

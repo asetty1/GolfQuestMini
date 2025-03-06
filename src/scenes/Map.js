@@ -22,28 +22,20 @@ class Map extends Phaser.Scene {
         this.add.image(0, 0, 'map').setOrigin(0)
         let course = this.physics.add.sprite(0, 0, 'mapCollision').setOrigin(0)
 
-        course.body.debugShowBody = true;
-        course.body.debugBodyColor = 0x00ff00;
-
         // Add player to the map scene`
-        this.lina = new Guy(this, 1000, 1100, 'hero', 0, 'down', false)
-        this.ace = new Guy(this, 1500, 1000, 'hero', 0, 'down', true)
+        this.lina = new Follow(this, 1000, 1100, 'ace', 0, 'down', true)
+        this.ace = new Guy(this, 1500, 1000, 'ace', 0, 'down', true)
+        this.lina.setTint(0xff0000)
 
-        console.log("Ace created:", this.ace);
-        console.log("Lina created:", this.lina);
-        this.ace.play('walk-down');
-        this.lina.play('walk-down');
         //this.physics.add.sprite(1000, 1100, 'hero', 0)
         //this.lina = this.physics.add.sprite(1000, 1100, 'hero', 0)
         //this.lina.body.setVelocity(90, 90)
-        //
-
-        this.physics.add.collider(this.ace, course, this.handleCollision, null, this)
         
         
         this.guyFSM = this.ace.scene.guyFSM
+        this.followFSM = this.lina.scene.followFSM
 
-        // set up camera
+        //camera
         this.cameras.main.setBounds(0, 0, this.map.width, this.map.height)
         this.cameras.main.startFollow(this.ace, false, 0.5, 0.5)
         this.physics.world.setBounds(0, 0, 1733, 1158) //HARDCODED VALUES HERE ------------------
@@ -59,11 +51,6 @@ class Map extends Phaser.Scene {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
             this.physics.world.debugGraphic.clear()
         }, this)
-
-        // this.physics.add.collider(this.lina, this.ace, (lina, ace) => {
-        //     lina.body.setVelocity(0, 0);
-        //     ace.body.setVelocity(0, 0);
-        // })
     }
 
     handleCollision(player, obstacle) {
@@ -73,6 +60,7 @@ class Map extends Phaser.Scene {
 
     update() {
         this.guyFSM.step()
+        this.followFSM.step()
     
         //LET LINA FOLLOW ME
         if (!this.physics.overlap(this.lina, this.ace)) {

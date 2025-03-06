@@ -32,8 +32,7 @@ class IdleState extends State {
     }
 
     execute(scene, guy) {
-        console.log(`Guy: ${guy.texture.key}, isAce: ${guy.isAce}`);
-        if(!guy.isAce) return
+        //console.log(`Guy: ${guy.texture.key}, isAce: ${guy.isAce}`);
         // use destructuring to make a local copy of the keyboard object
         const { left, right, up, down, space, shift } = scene.keys
         const HKey = scene.keys.HKey
@@ -45,11 +44,6 @@ class IdleState extends State {
             return
         }
 
-        //circular swing
-        if(Phaser.Input.Keyboard.JustDown(FKey)) {
-            this.stateMachine.transition('circular')
-            return
-        }
 
         // transition to move if pressing a movement key
         if(left.isDown || right.isDown || up.isDown || down.isDown ) {
@@ -61,7 +55,6 @@ class IdleState extends State {
 
 class MoveState extends State {
     execute(scene, guy) {
-        if(!guy.isAce) return
         // use destructuring to make a local copy of the keyboard object
         const { left, right, up, down, space, shift } = scene.keys
         const HKey = scene.keys.HKey
@@ -110,9 +103,8 @@ class MoveState extends State {
 
 class SwingState extends State {
     enter(scene, guy) {
-        if(!guy.isAce) return
         guy.setVelocity(0)
-        guy.anims.play(`swing-${guy.direction}`)
+        guy.anims.play('swing-down')
         guy.once('animationcomplete', () => {
             this.stateMachine.transition('idle')
         })
