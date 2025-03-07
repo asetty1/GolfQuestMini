@@ -68,5 +68,9 @@ class Map extends Phaser.Scene {
         } else {
             this.lina.body.setVelocity(0, 0);
         }
+
+        if(Phaser.Input.Keyboard.JustDown(this.keys.FKey)) {
+            this.scene.start("fightscene")
+        }
     }
 }
