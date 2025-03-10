@@ -6,7 +6,7 @@ class Follow extends Phaser.Physics.Arcade.Sprite {
 
         this.isFollow = isFollow
 
-        this.setScale(0.5)
+        this.setScale(0.4)
 
         this.body.setSize(this.width/2, this.height/2)
         this.body.setCollideWorldBounds(true)

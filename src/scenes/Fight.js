@@ -152,14 +152,19 @@ class Fight extends Phaser.Scene {
         this.mashSprite.play(anim);
 
         this.input.keyboard.on('keydown-' + key, this.countMash, this);
-        this.time.delayedCall(this.mashTimer, this.checkMashCount, [], this);
+        this.time.delayedCall(this.mashTimer, () => {
+            this.checkMashCount(anim),
+            this.stopAnimation(anim)
+         }, [], this);
+        
+
     }
 
     countMash() {
         this.mashCount++;
     }
 
-    checkMashCount() {
+    checkMashCount(anim) {
         if (this.currentKey) {
             this.input.keyboard.off('keydown-' + this.currentKey.keyCode, this.countMash, this);
         }
@@ -173,12 +178,19 @@ class Fight extends Phaser.Scene {
         this.time.delayedCall(5000, this.pickRandomFunction, [], this);
     }
 
+    stopAnimation (anim) {
+        if (this.mashSprite) {
+            this.mashSprite.anims.stop()
+            this.mashSprite.destroy()
+        }
+    }
+
     getKeyCharacter(keyCode) {
         const keyMap = {
-            88: 'X', // Key code for 'X'
-            65: 'A', // Key code for 'A'
-            72: 'H', // Key code for 'H'
-            84: 'T'  // Key code for 'T'
+            88: 'X',
+            65: 'A',
+            72: 'H',
+            84: 'T'
         };
         return keyMap[keyCode] || 'Unknown Key';
     }

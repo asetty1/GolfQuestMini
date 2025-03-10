@@ -8,7 +8,9 @@ class Map extends Phaser.Scene {
 
         // map assets
         this.map = this.load.image('map', 'mapbase.png')
-        this.load.image('mapCollision', 'mapcollision.png')
+        this.extras = this.load.image('extra', 'mapextra.png')
+
+        this.load.image('textbox', 'textbox-01.png')
 
         // character assets
         this.load.spritesheet("ace-walkf", "ace-walkf.png", {
@@ -20,25 +22,30 @@ class Map extends Phaser.Scene {
 
     create() {
         this.add.image(0, 0, 'map').setOrigin(0)
-        let course = this.physics.add.sprite(0, 0, 'mapCollision').setOrigin(0)
+        this.add.image(0, 0, 'extra').setOrigin(0)
 
         // Add player to the map scene`
-        this.lina = new Follow(this, 1000, 1100, 'ace', 0, 'down', true)
-        this.ace = new Guy(this, 1500, 1000, 'ace', 0, 'down', true)
+        this.lina = new Follow(this, 1250, 210, 'ace', 0, 'down', true)
+        this.ace = new Guy(this, 1100, 220, 'ace', 0, 'down', true)
         this.lina.setTint(0xff0000)
 
-        //this.physics.add.sprite(1000, 1100, 'hero', 0)
-        //this.lina = this.physics.add.sprite(1000, 1100, 'hero', 0)
-        //this.lina.body.setVelocity(90, 90)
+        //ADDING COLLIDERS
+        let lineA = this.add.rectangle(866, 407, 41, 10, 0xAF5F5D).setAngle(-27.57)
+        this.physics.add.existing(lineA, true)
+
+        if (lineA.body) {
+           //lineA.body.setImmovable(true)
+            lineA.body.rotation = Phaser.Math.DegToRad(-27.57)
+        }
         
         
         this.guyFSM = this.ace.scene.guyFSM
         this.followFSM = this.lina.scene.followFSM
 
         //camera
-        this.cameras.main.setBounds(0, 0, this.map.width, this.map.height)
+        this.cameras.main.setBounds(100, 100, 1300, 800)
         this.cameras.main.startFollow(this.ace, false, 0.5, 0.5)
-        this.physics.world.setBounds(0, 0, 1733, 1158) //HARDCODED VALUES HERE ------------------
+        this.physics.world.setBounds(100, 100, 1300, 800) //HARDCODED VALUES HERE ------------------
 
 
         // setup keyboard input
@@ -67,6 +74,11 @@ class Map extends Phaser.Scene {
             this.physics.moveToObject(this.lina, this.ace, 90, 1000);
         } else {
             this.lina.body.setVelocity(0, 0);
+        }
+
+        if(this.physics.overlap(this.ace, this.lineA)) {
+            console.log("HES STANDING RIGHT THERE")
+            this.add.sprite(741, 480, 'textbox')
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.keys.FKey)) {
