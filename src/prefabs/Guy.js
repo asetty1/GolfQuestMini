@@ -66,12 +66,6 @@ class MoveState extends State {
             return
         }
 
-        //circular swing
-        if(Phaser.Input.Keyboard.JustDown(FKey)) {
-            this.stateMachine.transition('circular')
-            return
-        }
-
         // transition to idle if not pressing movement keys
         if(!(left.isDown || right.isDown || up.isDown || down.isDown)) {
             this.stateMachine.transition('idle')

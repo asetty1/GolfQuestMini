@@ -8,7 +8,15 @@ class Fight extends Phaser.Scene {
 
         // map assets
         this.load.image('bg', 'fightbg.png');
-        this.load.image('windmill', 'windmill.png');
+        this.load.image('success', 'success-textbox.png')
+
+
+        this.load.spritesheet('windmill', 'spritesheet-windmill.png', {
+            frameWidth: 1265,
+            frameHeight: 1250,
+            startFrame: 0,
+            endFrame: 3,
+        })
 
         this.load.spritesheet('xmash', 'xmash.png', {
             frameWidth: 100,
@@ -42,7 +50,18 @@ class Fight extends Phaser.Scene {
     create() {
         this.add.image(0, 0, 'bg').setOrigin(0);
 
-        let windmill = this.add.image(-150, 220, 'windmill');
+        this.anims.create({
+            key: 'spin',
+            frames: this.anims.generateFrameNumbers('windmill', {
+                start: 0,
+                end: 3
+            }),
+            frameRate: 10,
+            repeat: -1
+        })
+
+        let windmill = this.add.sprite(-150, 220, 'windmill');
+        windmill.setScale(0.25)
         let windmillTween = this.tweens.add({
             delay: 125,
             targets: windmill,
@@ -54,6 +73,8 @@ class Fight extends Phaser.Scene {
         });
 
         windmillTween.play();
+        windmill.play('spin')
+
 
         // Create animations
         this.anims.create({
@@ -99,13 +120,17 @@ class Fight extends Phaser.Scene {
         this.mashCount = 0;
         this.target = 2;
         this.mashTimer = 3000;
+        this.successCount = 0;
+
+        this.popupImage = this.add.sprite(400, 300, 'success').setVisible(false)
 
         this.keys = [
             Phaser.Input.Keyboard.KeyCodes.X,
             Phaser.Input.Keyboard.KeyCodes.A,
             Phaser.Input.Keyboard.KeyCodes.H,
-            Phaser.Input.Keyboard.KeyCodes.T
-        ];
+            Phaser.Input.Keyboard.KeyCodes.T,
+            Phaser.Input.Keyboard.KeyCodes.M
+        ]
 
         this.currentKey = null;
         this.mashSprite = null;
@@ -114,7 +139,9 @@ class Fight extends Phaser.Scene {
     }
 
     startButtonMashing() {
-        this.time.delayedCall(1000, this.pickRandomFunction, [], this);
+        if (this.successCount < 4) {
+            this.time.delayedCall(1000, this.pickRandomFunction, [], this);
+        }
     }
 
     pickRandomFunction() {
@@ -157,7 +184,6 @@ class Fight extends Phaser.Scene {
             this.stopAnimation(anim)
          }, [], this);
         
-
     }
 
     countMash() {
@@ -171,11 +197,17 @@ class Fight extends Phaser.Scene {
 
         if (this.mashCount >= this.target) {
             console.log("Yay, you did it!!");
+            this.successCount++
         } else {
             console.log("You Lost :(((");
         }
 
-        this.time.delayedCall(5000, this.pickRandomFunction, [], this);
+        if (this.successCount >= 4) {
+            this.popupImage.setVisible(true);
+            console.log("You won!"); // Debugging message
+        } else {
+            this.time.delayedCall(5000, this.pickRandomFunction, [], this);
+        }
     }
 
     stopAnimation (anim) {
@@ -193,5 +225,13 @@ class Fight extends Phaser.Scene {
             84: 'T'
         };
         return keyMap[keyCode] || 'Unknown Key';
+    }
+
+    update() {
+        if (this.successCount >= 4) {
+            if(Phaser.Input.Keyboard.KeyCodes.M) {
+                this.scene.start("mapscene")
+            }
+        }
     }
 }

@@ -10,7 +10,8 @@ class Map extends Phaser.Scene {
         this.map = this.load.image('map', 'mapbase.png')
         this.extras = this.load.image('extra', 'mapextra.png')
 
-        this.load.image('textbox', 'textbox-01.png')
+        this.load.image('windfight', 'windmill-fight.png')
+        this.load.image('waterfight', 'waterfountain-fight.png')
 
         // character assets
         this.load.spritesheet("ace-walkf", "ace-walkf.png", {
@@ -22,21 +23,29 @@ class Map extends Phaser.Scene {
 
     create() {
         this.add.image(0, 0, 'map').setOrigin(0)
-        this.add.image(0, 0, 'extra').setOrigin(0)
+        this.add.image(0, 0, 'extra').setOrigin(0).setDepth(10)
 
         // Add player to the map scene`
-        this.lina = new Follow(this, 1250, 210, 'ace', 0, 'down', true)
+        this.lina = new Follow(this, 1250, 210, 'lina', 0, 'down', true)
         this.ace = new Guy(this, 1100, 220, 'ace', 0, 'down', true)
-        this.lina.setTint(0xff0000)
+        this.ace.setDepth(5)
+        this.lina.setDepth(5)
 
         //ADDING COLLIDERS
+        //line a - windmill
         let lineA = this.add.rectangle(866, 407, 41, 10, 0xAF5F5D).setAngle(-27.57)
-        this.physics.add.existing(lineA, true)
+        this.lineA = lineA
+        this.physics.add.existing(this.lineA, true)
 
-        if (lineA.body) {
-           //lineA.body.setImmovable(true)
-            lineA.body.rotation = Phaser.Math.DegToRad(-27.57)
-        }
+        //line b - boss #3
+        let lineB = this.add.rectangle(446, 176, 10, 45, 0xAF5F5D)
+        this.lineB = lineB
+        this.physics.add.existing(this.lineB, true)
+
+        //line c - water fountain
+        let lineC = this.add.rectangle(407, 398, 10, 45, 0xAF5F5D).setAngle(123)
+        this.lineC = lineC
+        this.physics.add.existing(this.lineC, true)
         
         
         this.guyFSM = this.ace.scene.guyFSM
@@ -58,6 +67,22 @@ class Map extends Phaser.Scene {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
             this.physics.world.debugGraphic.clear()
         }, this)
+
+        //textboxes
+        let camera = this.cameras.main;
+        let textboxX = camera.width / 2;
+        let textboxY = camera.height - 100;
+        this.windfight = this.add.image(textboxX, textboxY, 'windfight')
+                            .setScrollFactor(0)
+                            .setDepth(100)
+                            .setOrigin(0.5, 0.5); // center the sprite
+        this.windfight.setVisible(false);
+
+        this.waterfight = this.add.image(textboxX, textboxY, 'waterfight')
+                            .setScrollFactor(0)
+                            .setDepth(100)
+                            .setOrigin(0.5, 0.5); // center the sprite
+        this.waterfight.setVisible(false);
     }
 
     handleCollision(player, obstacle) {
@@ -76,9 +101,16 @@ class Map extends Phaser.Scene {
             this.lina.body.setVelocity(0, 0);
         }
 
-        if(this.physics.overlap(this.ace, this.lineA)) {
-            console.log("HES STANDING RIGHT THERE")
-            this.add.sprite(741, 480, 'textbox')
+        if (this.physics.overlap(this.ace, this.lineA)) {
+            console.log("windmill");
+            this.windfight.setVisible(true);
+        } else if (this.physics.overlap(this.ace, this.lineB)) {
+            console.log("water fountain");
+            this.waterfight.setVisible(true);
+        
+        }else {
+            this.windfight.setVisible(false)
+            this.waterfight.setVisible(false)
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.keys.FKey)) {

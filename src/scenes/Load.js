@@ -10,6 +10,10 @@ class Load extends Phaser.Scene {
             frameWidth: 150,
             frameHeight: 150,
         })
+        this.load.spritesheet('lina', 'lina-sheet.png', {
+            frameWidth: 150,
+            frameHeight: 150,
+        })
         this.load.image('map', 'mapbase.png')
     }
 
@@ -46,6 +50,32 @@ class Load extends Phaser.Scene {
             frameRate: 8,
             repeat: 0,
             frames: this.anims.generateFrameNumbers('ace', { start: 16, end: 19 }),
+        })
+
+        // lina animations (walking)
+        this.anims.create({
+            key: 'w-down',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('lina', { start: 0, end: 3 }),
+        })
+        this.anims.create({
+            key: 'w-right',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('lina', { start: 4, end: 7 }),
+        })
+        this.anims.create({
+            key: 'w-up',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('lina', { start: 8, end: 11 }),
+        })
+        this.anims.create({
+            key: 'w-left',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('lina', { start: 12, end: 15 }),
         })
 
         // proceed once loading completes

@@ -6,7 +6,7 @@ class Follow extends Phaser.Physics.Arcade.Sprite {
 
         this.isFollow = isFollow
 
-        this.setScale(0.4)
+        this.setScale(0.35)
 
         this.body.setSize(this.width/2, this.height/2)
         this.body.setCollideWorldBounds(true)
@@ -26,7 +26,7 @@ class Follow extends Phaser.Physics.Arcade.Sprite {
 class Idle extends State {
     enter(scene, follow) {
         follow.setVelocity(0)
-        follow.anims.play(`walk-${follow.direction}`)
+        follow.anims.play(`w-${follow.direction}`)
         follow.anims.stop()
     }
 
@@ -71,7 +71,7 @@ class Move extends State {
             follow.direction = 'right'
         }
 
-        follow.anims.play(`walk-${follow.direction}`, true)
+        follow.anims.play(`w-${follow.direction}`, true)
     }
 }
 
