@@ -6,11 +6,8 @@ class Title extends Phaser.Scene {
     preload() {
         this.load.path = "./assets/";
 
-        // dialogue assests
-        this.load.image('dbox', 'dialogbox.png');
-        this.load.image('dace', 'ace-dialog.png');
-        this.load.image('dwedge', 'wedge-dialog.png');
-        this.load.image('dlina', 'lina-dialog.png');
+        //audio
+        this.load.audio('sfx-beep', 'sound/title.wav')
 
         // backgrounds
         this.load.image('loadscreen', 'loadscreen.png'); // Corrected file extension
@@ -20,6 +17,14 @@ class Title extends Phaser.Scene {
         this.add.image(0, 0, 'loadscreen').setOrigin(0).setScale(0.5);
         //this.add.Text(centerX, centerY, 'arial', 'Press SPACE to start', 16).setOrigin(0.5)
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.time.addEvent({
+            delay: 2000,
+            callback: () => {
+                this.sound.play('sfx-beep');
+            },
+            loop: true
+        })
     }
 
     update() {

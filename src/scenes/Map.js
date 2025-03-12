@@ -6,11 +6,14 @@ class Map extends Phaser.Scene {
     preload() {
         this.load.path = "./assets/";
 
+        this.load.audio('bgmusic', 'sound/Cigartte_Boat.wav')
+        this.load.audio('boss', 'sound/bossappears.wav')
+
         // map assets
         this.map = this.load.image('map', 'mapbase.png')
         this.extras = this.load.image('extra', 'mapextra-01.png')
         this.flowers = this.load.image('flowers', 'flower.png')
-        this.water = this.load.spritesheet('lake', 'fountainanimation.png', {
+        this.load.spritesheet('lake', 'fountainanimation.png', {
             frameWidth: 1400,
             frameHeight: 1000,
             startFrame: 0,
@@ -29,6 +32,7 @@ class Map extends Phaser.Scene {
     }
 
     create() {
+        //this.sound.play('bgmusic')
         this.add.image(0, 0, 'map').setOrigin(0).setDepth(1)
         this.add.image(0, 0, 'extra').setOrigin(0).setDepth(10)
         this.add.image(0, 0, 'flowers').setOrigin(0).setDepth(2)
@@ -41,7 +45,7 @@ class Map extends Phaser.Scene {
             frameRate: 1,
             repeat: -1
         })
-        this.fountain = this.add.sprite(0, 0, 'lake').setOrigin(0)
+        this.fountain = this.add.sprite(0, 0, 'lake').setOrigin(0).setDepth(3)
         this.fountain.play('fountain')
         
 
@@ -68,19 +72,19 @@ class Map extends Phaser.Scene {
         this.physics.add.existing(this.lineC, true)
 
         //colliders for water
-        this.circle1 = this.add.circle(169, 690, 204, 0xffffff).setOrigin(0)
+        this.circle1 = this.add.circle(169, 690, 204, 0xffffff).setOrigin(0).setAlpha(0)
         this.physics.add.existing(this.circle1, true)
         this.circle1.body.setCircle(102)
 
-        this.circle2 = this.add.circle(312, 639, 65, 0xffffff).setOrigin(0)
+        this.circle2 = this.add.circle(312, 639, 65, 0xffffff).setOrigin(0).setAlpha(0)
         this.physics.add.existing(this.circle2, true)
         this.circle2.body.setCircle(65)
 
-        this.circle3 = this.add.circle(395, 441, 65, 0xffffff).setOrigin(0)
+        this.circle3 = this.add.circle(395, 441, 65, 0xffffff).setOrigin(0).setAlpha(0)
         this.physics.add.existing(this.circle3, true)
         this.circle3.body.setCircle(65)
 
-        this.rectangle1 = this.add.rectangle(395, 502, 48, 200).setOrigin(0)
+        this.rectangle1 = this.add.rectangle(395, 502, 48, 200).setOrigin(0).setAlpha(0)
         this.physics.add.existing(this.rectangle1, true)
 
         this.physics.add.collider(this.ace, this.circle1)
@@ -151,7 +155,9 @@ class Map extends Phaser.Scene {
             console.log("windmill");
             this.windfight.setVisible(true);
             if(Phaser.Input.Keyboard.JustDown(this.keys.space)) {
-                this.scene.start("windmill")
+                this.sound.play('boss')
+                this.time.delayedCall(500, () => {this.scene.start("windmill")})
+                
             }
         } else if (this.physics.overlap(this.ace, this.lineC)) {
             console.log("water fountain");

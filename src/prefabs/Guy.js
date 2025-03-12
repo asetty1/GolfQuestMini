@@ -13,7 +13,7 @@ class Guy extends Phaser.Physics.Arcade.Sprite {
 
         //character properties
         this.direction = direction
-        this.velo = 100
+        this.velo = 140
         this.shotCooldown = 300
 
         scene.guyFSM = new StateMachine('idle', {
