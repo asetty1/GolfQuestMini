@@ -1,6 +1,6 @@
-class WindmillFight extends Phaser.Scene {
+class WaterFight extends Phaser.Scene {
     constructor() {
-        super("windmill");
+        super("waterfountain");
     }
 
     preload() {
@@ -11,11 +11,11 @@ class WindmillFight extends Phaser.Scene {
         this.load.image('success', 'success-textbox.png')
 
 
-        this.load.spritesheet('windmill', 'spritesheet-windmill.png', {
-            frameWidth: 1265,
-            frameHeight: 1250,
+        this.load.spritesheet('water', 'spritesheet-fountain.png', {
+            frameWidth: 1169,
+            frameHeight: 1449,
             startFrame: 0,
-            endFrame: 3,
+            endFrame: 1,
         })
 
         this.load.spritesheet('xmash', 'xmash.png', {
@@ -52,19 +52,19 @@ class WindmillFight extends Phaser.Scene {
 
         this.anims.create({
             key: 'spin',
-            frames: this.anims.generateFrameNumbers('windmill', {
+            frames: this.anims.generateFrameNumbers('water', {
                 start: 0,
-                end: 3
+                end: 1
             }),
-            frameRate: 10,
+            frameRate: 5,
             repeat: -1
         })
 
-        let windmill = this.add.sprite(-150, 220, 'windmill');
-        windmill.setScale(0.25)
-        let windmillTween = this.tweens.add({
+        let water = this.add.sprite(-150, 220, 'water');
+        water.setScale(0.25)
+        let waterTween = this.tweens.add({
             delay: 125,
-            targets: windmill,
+            targets: water,
             x: 220,
             ease: 'Linear',
             duration: 250,
@@ -72,8 +72,8 @@ class WindmillFight extends Phaser.Scene {
             paused: false
         });
 
-        windmillTween.play();
-        windmill.play('spin')
+        waterTween.play();
+        water.play('spin')
 
 
         // Create animations
