@@ -6,8 +6,8 @@ class Map extends Phaser.Scene {
     preload() {
         this.load.path = "./assets/";
 
-        this.load.audio('bgmusic', 'sound/Cigartte_Boat.wav')
-        this.load.audio('boss', 'sound/bossappears.wav')
+        //this.load.audio('bgmusic', 'sound/Cigartte_Boat.wav')
+        //this.load.audio('boss', 'sound/bossappears.wav')
 
         // map assets
         this.map = this.load.image('map', 'mapbase.png')
@@ -155,8 +155,8 @@ class Map extends Phaser.Scene {
             console.log("windmill");
             this.windfight.setVisible(true);
             if(Phaser.Input.Keyboard.JustDown(this.keys.space)) {
-                this.sound.play('boss')
-                this.time.delayedCall(500, () => {this.scene.start("windmill")})
+                //this.sound.play('boss')
+                this.time.delayedCall(0, () => {this.scene.start("windmill")})
                 
             }
         } else if (this.physics.overlap(this.ace, this.lineC)) {
