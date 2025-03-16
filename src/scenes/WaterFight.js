@@ -1,14 +1,16 @@
 class WaterFight extends Phaser.Scene {
     constructor() {
-        super("waterfountain");
+        super("waterfountain")
     }
 
     preload() {
-        this.load.path = "./assets/";
+        this.load.path = "./assets/"
 
         // map assets
-        this.load.image('bg', 'fightbg.png');
+        this.load.image('bg', 'fightbg.png')
+        this.load.image('introbox', 'fighttextbox.png')
         this.load.image('success', 'success-textbox.png')
+        this.load.image('aceandlina', 'acelinafight.png')
 
 
         this.load.spritesheet('water', 'spritesheet-fountain.png', {
@@ -23,32 +25,32 @@ class WaterFight extends Phaser.Scene {
             frameHeight: 80,
             startFrame: 0,
             endFrame: 1
-        });
+        })
         
         this.load.spritesheet('amash', 'amash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
             endFrame: 1
-        });
+        })
 
         this.load.spritesheet('tmash', 'tmash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
             endFrame: 1
-        });
+        })
 
         this.load.spritesheet('hmash', 'hmash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
             endFrame: 1
-        });
+        })
     }
 
     create() {
-        this.add.image(0, 0, 'bg').setOrigin(0);
+        this.add.image(0, 0, 'bg').setOrigin(0)
 
         this.anims.create({
             key: 'spin',
@@ -60,7 +62,7 @@ class WaterFight extends Phaser.Scene {
             repeat: -1
         })
 
-        let water = this.add.sprite(-150, 220, 'water');
+        let water = this.add.sprite(-150, 220, 'water')
         water.setScale(0.25)
         let waterTween = this.tweens.add({
             delay: 125,
@@ -69,12 +71,23 @@ class WaterFight extends Phaser.Scene {
             ease: 'Linear',
             duration: 250,
             repeat: 0,
-            paused: false
-        });
+            paused: true,
+            onComplete: () => {
+                water.play('spin')
+            }
+        })
 
-        waterTween.play();
-        water.play('spin')
-
+        let acelina = this.add.sprite(900, 465, 'aceandlina')
+        acelina.setScale(0.75)
+        let acelinaTween = this.tweens.add({
+            delay: 125,
+            targets: acelina,
+            x: 600,
+            ease: 'Linear',
+            duration: 250,
+            repeat: 0,
+            paused: true
+        })
 
         // Create animations
         this.anims.create({
@@ -85,7 +98,7 @@ class WaterFight extends Phaser.Scene {
             }),
             frameRate: 7,
             repeat: -1
-        });
+        })
 
         this.anims.create({
             key: 'amash',
@@ -95,7 +108,7 @@ class WaterFight extends Phaser.Scene {
             }),
             frameRate: 7,
             repeat: -1
-        });
+        })
 
         this.anims.create({
             key: 'tmash',
@@ -105,7 +118,7 @@ class WaterFight extends Phaser.Scene {
             }),
             frameRate: 7,
             repeat: -1
-        });
+        })
 
         this.anims.create({
             key: 'hmash',
@@ -115,14 +128,15 @@ class WaterFight extends Phaser.Scene {
             }),
             frameRate: 7,
             repeat: -1
-        });
+        })
 
-        this.mashCount = 0;
-        this.target = 2;
-        this.mashTimer = 3000;
-        this.successCount = 0;
+        this.mashCount = 0
+        this.target = 2
+        this.mashTimer = 3000
+        this.successCount = 0
 
         this.popupImage = this.add.sprite(400, 300, 'success').setVisible(false)
+        this.startUp = this.add.sprite(400, 300, 'introbox')
 
         this.keys = [
             Phaser.Input.Keyboard.KeyCodes.X,
@@ -132,81 +146,88 @@ class WaterFight extends Phaser.Scene {
             Phaser.Input.Keyboard.KeyCodes.M
         ]
 
-        this.currentKey = null;
-        this.mashSprite = null;
+        this.currentKey = null
+        this.mashSprite = null
 
-        this.startButtonMashing();
+        //this.startUp.setVisible(true)
+        this.time.delayedCall(3000, () => {
+            this.startUp.setVisible(false)
+            waterTween.play()
+            acelinaTween.play()
+            this.startButtonMashing()
+        }, [], this)
+        
     }
 
     startButtonMashing() {
         if (this.successCount < 4) {
-            this.time.delayedCall(1000, this.pickRandomFunction, [], this);
+            this.time.delayedCall(1000, this.pickRandomFunction, [], this)
         }
     }
 
     pickRandomFunction() {
-        let functions = [this.functionX, this.functionA, this.functionH, this.functionT];
-        let randomIndex = Phaser.Math.Between(0, functions.length - 1);
-        functions[randomIndex].call(this);
+        let functions = [this.functionX, this.functionA, this.functionH, this.functionT]
+        let randomIndex = Phaser.Math.Between(0, functions.length - 1)
+        functions[randomIndex].call(this)
     }
 
     functionX() {
-        this.handleMash('X', 'xmash');
+        this.handleMash('X', 'xmash')
     }
 
     functionA() {
-        this.handleMash('A', 'amash');
+        this.handleMash('A', 'amash')
     }
 
     functionH() {
-        this.handleMash('H', 'hmash');
+        this.handleMash('H', 'hmash')
     }
 
     functionT() {
-        this.handleMash('T', 'tmash');
+        this.handleMash('T', 'tmash')
     }
 
     handleMash(key, anim) {
-        this.currentKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes[key]);
-        this.mashCount = 0;
-        console.log(`Start mashing the ${key} key!`);
+        this.currentKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes[key])
+        this.mashCount = 0
+        console.log(`Start mashing the ${key} key!`)
 
         if (this.mashSprite) {
-            this.mashSprite.destroy();
+            this.mashSprite.destroy()
         }
 
-        this.mashSprite = this.add.sprite(400, 300, anim);
-        this.mashSprite.play(anim);
+        this.mashSprite = this.add.sprite(400, 300, anim)
+        this.mashSprite.play(anim)
 
-        this.input.keyboard.on('keydown-' + key, this.countMash, this);
+        this.input.keyboard.on('keydown-' + key, this.countMash, this)
         this.time.delayedCall(this.mashTimer, () => {
             this.checkMashCount(anim),
             this.stopAnimation(anim)
-         }, [], this);
+         }, [], this)
         
     }
 
     countMash() {
-        this.mashCount++;
+        this.mashCount++
     }
 
     checkMashCount(anim) {
         if (this.currentKey) {
-            this.input.keyboard.off('keydown-' + this.currentKey.keyCode, this.countMash, this);
+            this.input.keyboard.off('keydown-' + this.currentKey.keyCode, this.countMash, this)
         }
 
         if (this.mashCount >= this.target) {
-            console.log("Yay, you did it!!");
+            console.log("Yay, you did it!!")
             this.successCount++
         } else {
-            console.log("You Lost :(((");
+            console.log("You Lost :(((")
         }
 
         if (this.successCount >= 4) {
-            this.popupImage.setVisible(true);
-            console.log("You won!"); // Debugging message
+            this.popupImage.setVisible(true)
+            console.log("You won!") // Debugging message
         } else {
-            this.time.delayedCall(5000, this.pickRandomFunction, [], this);
+            this.time.delayedCall(5000, this.pickRandomFunction, [], this)
         }
     }
 
@@ -223,13 +244,16 @@ class WaterFight extends Phaser.Scene {
             65: 'A',
             72: 'H',
             84: 'T'
-        };
-        return keyMap[keyCode] || 'Unknown Key';
+        }
+        return keyMap[keyCode] || 'Unknown Key'
     }
 
     update() {
         if (this.successCount >= 4) {
-            if(Phaser.Input.Keyboard.KeyCodes.M) {
+            this.popupImage.setVisible(true)
+            console.log("You won!")
+
+            if(Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M))) {
                 this.scene.start("mapscene")
             }
         }

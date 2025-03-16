@@ -6,8 +6,8 @@ class Map extends Phaser.Scene {
     preload() {
         this.load.path = "./assets/";
 
-        //this.load.audio('bgmusic', 'sound/Cigartte_Boat.wav')
-        //this.load.audio('boss', 'sound/bossappears.wav')
+        this.load.audio('bgmusic', 'sound/cigarette-boat.wav')
+        this.load.audio('boss', 'sound/bossappears.wav')
 
         // map assets
         this.map = this.load.image('map', 'mapbase.png')
@@ -22,17 +22,19 @@ class Map extends Phaser.Scene {
 
         this.load.image('windfight', 'windmill-fight.png')
         this.load.image('waterfight', 'waterfountain-fight.png')
-
-        // character assets
-        this.load.spritesheet("ace-walkf", "ace-walkf.png", {
-            frameWidth: 64,
-            frameHeight: 91
-        });
-        this.load.image("ace-front", "ace-front.png");
     }
 
     create() {
-        //this.sound.play('bgmusic')
+        this.musicStarted = false;
+    
+        // Listen for any keydown event
+        this.input.keyboard.on('keydown', function () {
+            if (!this.musicStarted) {
+                this.sound.play('bgmusic');
+                this.musicStarted = true; // Prevent replaying on subsequent key presses
+            }
+        }, this)
+
         this.add.image(0, 0, 'map').setOrigin(0).setDepth(1)
         this.add.image(0, 0, 'extra').setOrigin(0).setDepth(10)
         this.add.image(0, 0, 'flowers').setOrigin(0).setDepth(2)
@@ -154,15 +156,15 @@ class Map extends Phaser.Scene {
         if (this.physics.overlap(this.ace, this.lineA)) {
             console.log("windmill");
             this.windfight.setVisible(true);
-            if(Phaser.Input.Keyboard.JustDown(this.keys.space)) {
-                //this.sound.play('boss')
+            if(Phaser.Input.Keyboard.JustDown(this.keys.FKey)) {
+                this.sound.play('boss')
                 this.time.delayedCall(0, () => {this.scene.start("windmill")})
                 
             }
         } else if (this.physics.overlap(this.ace, this.lineC)) {
             console.log("water fountain");
             this.waterfight.setVisible(true);
-            if(Phaser.Input.Keyboard.JustDown(this.keys.space)) {
+            if(Phaser.Input.Keyboard.JustDown(this.keys.FKey)) {
                 this.scene.start("waterfountain")
             }
         
