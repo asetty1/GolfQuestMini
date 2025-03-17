@@ -22,18 +22,11 @@ class Map extends Phaser.Scene {
 
         this.load.image('windfight', 'windmill-fight.png')
         this.load.image('waterfight', 'waterfountain-fight.png')
+        this.load.image('instructions', 'instructions.png')
     }
 
     create() {
-        this.musicStarted = false;
-    
-        // Listen for any keydown event
-        this.input.keyboard.on('keydown', function () {
-            if (!this.musicStarted) {
-                this.sound.play('bgmusic');
-                this.musicStarted = true; // Prevent replaying on subsequent key presses
-            }
-        }, this)
+        this.musicStarted = false
 
         this.add.image(0, 0, 'map').setOrigin(0).setDepth(1)
         this.add.image(0, 0, 'extra').setOrigin(0).setDepth(10)
@@ -89,6 +82,10 @@ class Map extends Phaser.Scene {
         this.rectangle1 = this.add.rectangle(395, 502, 48, 200).setOrigin(0).setAlpha(0)
         this.physics.add.existing(this.rectangle1, true)
 
+        //collider for instuctions
+        this.rectangle2 = this.add.rectangle(970, 190, 110, 64).setOrigin(0).setAlpha(0)
+        this.physics.add.existing(this.rectangle2, true)
+
         this.physics.add.collider(this.ace, this.circle1)
         this.physics.add.collider(this.ace, this.circle2)
         this.physics.add.collider(this.ace, this.circle3)
@@ -135,11 +132,23 @@ class Map extends Phaser.Scene {
                             .setDepth(100)
                             .setOrigin(0.5, 0.5); // center the sprite
         this.waterfight.setVisible(false);
-    }
 
-    handleCollision(player, obstacle) {
-        //console.log('Collision detected between player and obstacle!');
+        this.instructions = this.add.image(textboxX, textboxY, 'instructions')
+                            .setScrollFactor(0)
+                            .setDepth(100)
+                            .setOrigin(0.5, 0.5); // center the sprite
 
+        // Listen for any keydown event
+        this.bgMusic = this.sound.add('bgmusic', { volume: 0.3, loop: true })
+        //this.instructions.setVisible(true)
+        this.input.keyboard.on('keydown', function () {
+            //this.instructions.setVisible(false)
+
+            if (!this.musicStarted) {
+                this.bgMusic.play()
+                this.musicStarted = true
+            }
+        }, this)
     }
 
     update() {
@@ -167,8 +176,11 @@ class Map extends Phaser.Scene {
             if(Phaser.Input.Keyboard.JustDown(this.keys.FKey)) {
                 this.scene.start("waterfountain")
             }
-        
-        }else {
+        } else if (this.physics.overlap(this.ace, this.rectangle2)) {
+             this.instructions.setVisible(true)
+        } else if (!this.physics.overlap(this.ace, this.rectangle2)) {
+            this.instructions.setVisible(false)
+        } else {
             this.windfight.setVisible(false)
             this.waterfight.setVisible(false)
         }
