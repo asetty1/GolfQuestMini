@@ -8,6 +8,7 @@ class Map extends Phaser.Scene {
 
         this.load.audio('bgmusic', 'sound/cigarette-boat.wav')
         this.load.audio('boss', 'sound/bossappears.wav')
+        this.load.audio('overlap', 'sound/boss.wav')
 
         // map assets
         this.map = this.load.image('map', 'mapbase.png')
@@ -22,6 +23,7 @@ class Map extends Phaser.Scene {
 
         this.load.image('windfight', 'windmill-fight.png')
         this.load.image('waterfight', 'waterfountain-fight.png')
+        this.load.image('credits', 'credits-textbox')
         this.load.image('instructions', 'instructions.png')
     }
 
@@ -109,6 +111,7 @@ class Map extends Phaser.Scene {
         this.keys = this.input.keyboard.createCursorKeys()
         this.keys.HKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H)
         this.keys.FKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
+        this.keys.CKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
         this.keys.Space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
         // debug key listener (assigned to D key)
@@ -149,11 +152,14 @@ class Map extends Phaser.Scene {
                 this.musicStarted = true
             }
         }, this)
+
+        this.bossTheme = false
     }
 
     update() {
         this.guyFSM.step()
         this.followFSM.step()
+        
     
         //LET LINA FOLLOW ME
         if (!this.physics.overlap(this.lina, this.ace)) {
@@ -164,25 +170,43 @@ class Map extends Phaser.Scene {
 
         if (this.physics.overlap(this.ace, this.lineA)) {
             console.log("windmill");
-            this.windfight.setVisible(true);
+            this.windfight.setVisible(true)
+            if (!this.bossTheme) {
+                this.bossTheme = true
+                this.bgMusic.setVolume(0.1)
+                this.sound.play('overlap', {volume: 0.3, loop: false})
+            }
+            
             if(Phaser.Input.Keyboard.JustDown(this.keys.FKey)) {
-                this.sound.play('boss')
+                this.sound.add('boss')
                 this.time.delayedCall(0, () => {this.scene.start("windmill")})
                 
             }
+
         } else if (this.physics.overlap(this.ace, this.lineC)) {
             console.log("water fountain");
-            this.waterfight.setVisible(true);
+            this.waterfight.setVisible(true)
+            if (!this.bossTheme) {
+                this.bossTheme = true
+                this.bgMusic.setVolume(0.1)
+                this.sound.play('overlap', {volume: 0.3, loop: false})
+            }
+
             if(Phaser.Input.Keyboard.JustDown(this.keys.FKey)) {
+                this.sound.play('boss')
                 this.scene.start("waterfountain")
             }
+
         } else if (this.physics.overlap(this.ace, this.rectangle2)) {
              this.instructions.setVisible(true)
-        } else if (!this.physics.overlap(this.ace, this.rectangle2)) {
-            this.instructions.setVisible(false)
+        
         } else {
             this.windfight.setVisible(false)
             this.waterfight.setVisible(false)
+            this.instructions.setVisible(false)
+
+            this.bossTheme = false
+            this.bgMusic.setVolume(0.3)
         }
     }
 }

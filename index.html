@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Golf Quest Mini</title>
+
+    <!-- Loading custom font -->
+    <script>
+        const newFontFace = new FontFace('moonflower', 'url(./assets/fonts/MoonFlowerBold-MVppp.ttf)');
+        
+        newFontFace.load().then((loadedFont) => {
+            document.fonts.add(loadedFont);
+            console.log('Font loaded successfully!');
+        }).catch((error) => {
+            console.error('Error loading font:', error);
+        });
+    </script>
+
+
     <script src="./lib/phaser.js"></script>
+    <script src="./src/scenes/Credits.js" ></script>
     <script src="./src/scenes/Load.js"></script>
     <script src="./lib/StateMachine.js"></script>
     <script src="./src/prefabs/Follow.js"></script>
