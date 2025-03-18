@@ -58,7 +58,7 @@ class WaterFight extends Phaser.Scene {
         this.add.image(0, 0, 'bg').setOrigin(0)
 
         this.anims.create({
-            key: 'spin',
+            key: 'splash',
             frames: this.anims.generateFrameNumbers('water', {
                 start: 0,
                 end: 1
@@ -78,7 +78,7 @@ class WaterFight extends Phaser.Scene {
             repeat: 0,
             paused: true,
             onComplete: () => {
-                water.play('spin')
+                water.play('splash')
             }
         })
 
