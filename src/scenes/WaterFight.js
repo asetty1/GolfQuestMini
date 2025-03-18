@@ -82,7 +82,7 @@ class WaterFight extends Phaser.Scene {
             }
         })
 
-        let acelina = this.add.sprite(900, 465, 'aceandlina')
+        let acelina = this.add.sprite(900, 420, 'aceandlina')
         acelina.setScale(0.75)
         let acelinaTween = this.tweens.add({
             delay: 125,
@@ -222,7 +222,7 @@ class WaterFight extends Phaser.Scene {
         this.winshot = this.add.sprite(1500, 300, 'win').setScale(0.4)
         this.winshotTween = this.tweens.add({
             delay: 125,
-            targets: winshot,
+            targets: this.winshot,
             x: 400,
             ease: 'Linear',
             duration: 300,
@@ -235,7 +235,7 @@ class WaterFight extends Phaser.Scene {
         this.loseshot = this.add.sprite(1500, 300, 'lose').setScale(0.4)
         this.loseshotTween = this.tweens.add({
             delay: 125,
-            targets: loseshot,
+            targets: this.loseshot,
             x: 400,
             ease: 'Linear',
             duration: 450,
@@ -252,15 +252,14 @@ class WaterFight extends Phaser.Scene {
 
         if (this.mashCount >= this.target) {
             console.log("Yay, you did it!!")
+            console.log("mash count: ", this.mashCount)
             this.sound.play('yay')
             this.winshotTween.play()
-            this.mashCount = 0
             this.successCount++
         } else {
             console.log("You Lost :(((")
-            this.mashCount = 0
             this.sound.play('ohno')
-            this.loseshotTween.restart()
+            this.loseshotTween.play()
         }
 
         if (this.successCount >= 4) {
