@@ -11,6 +11,11 @@ class WaterFight extends Phaser.Scene {
         this.load.image('introbox', 'fighttextbox.png')
         this.load.image('success', 'success-textbox.png')
         this.load.image('aceandlina', 'acelinafight.png')
+        this.load.image('win', 'winshot.png')
+        this.load.image('lose', 'loseshot.png')
+
+        this.load.audio('yay', 'sound/win.wav')
+        this.load.audio('ohno', 'sound/lose.wav')
 
 
         this.load.spritesheet('water', 'spritesheet-fountain.png', {
@@ -20,28 +25,28 @@ class WaterFight extends Phaser.Scene {
             endFrame: 1,
         })
 
-        this.load.spritesheet('xmash', 'xmash.png', {
+        this.load.spritesheet('xmas', 'buttons/xmash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
             endFrame: 1
         })
         
-        this.load.spritesheet('amash', 'amash.png', {
+        this.load.spritesheet('amas', 'buttons/amash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
             endFrame: 1
         })
 
-        this.load.spritesheet('tmash', 'tmash.png', {
+        this.load.spritesheet('tmas', 'buttons/tmash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
             endFrame: 1
         })
 
-        this.load.spritesheet('hmash', 'hmash.png', {
+        this.load.spritesheet('hmas', 'buttons/hmash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
@@ -89,10 +94,12 @@ class WaterFight extends Phaser.Scene {
             paused: true
         })
 
+        
+
         // Create animations
         this.anims.create({
-            key: 'xmash',
-            frames: this.anims.generateFrameNumbers('xmash', {
+            key: 'xmas',
+            frames: this.anims.generateFrameNumbers('xmas', {
                 start: 0,
                 end: 1
             }),
@@ -101,8 +108,8 @@ class WaterFight extends Phaser.Scene {
         })
 
         this.anims.create({
-            key: 'amash',
-            frames: this.anims.generateFrameNumbers('amash', {
+            key: 'amas',
+            frames: this.anims.generateFrameNumbers('amas', {
                 start: 0,
                 end: 1
             }),
@@ -111,8 +118,8 @@ class WaterFight extends Phaser.Scene {
         })
 
         this.anims.create({
-            key: 'tmash',
-            frames: this.anims.generateFrameNumbers('tmash', {
+            key: 'tmas',
+            frames: this.anims.generateFrameNumbers('tmas', {
                 start: 0,
                 end: 1
             }),
@@ -121,8 +128,8 @@ class WaterFight extends Phaser.Scene {
         })
 
         this.anims.create({
-            key: 'hmash',
-            frames: this.anims.generateFrameNumbers('hmash', {
+            key: 'hmas',
+            frames: this.anims.generateFrameNumbers('hmas', {
                 start: 0,
                 end: 1
             }),
@@ -131,8 +138,8 @@ class WaterFight extends Phaser.Scene {
         })
 
         this.mashCount = 0
-        this.target = 2
-        this.mashTimer = 3000
+        this.target = 20
+        this.mashTimer = 4000
         this.successCount = 0
 
         this.popupImage = this.add.sprite(400, 300, 'success').setVisible(false)
@@ -172,19 +179,19 @@ class WaterFight extends Phaser.Scene {
     }
 
     functionX() {
-        this.handleMash('X', 'xmash')
+        this.handleMash('X', 'xmas')
     }
 
     functionA() {
-        this.handleMash('A', 'amash')
+        this.handleMash('A', 'amas')
     }
 
     functionH() {
-        this.handleMash('H', 'hmash')
+        this.handleMash('H', 'hmas')
     }
 
     functionT() {
-        this.handleMash('T', 'tmash')
+        this.handleMash('T', 'tmas')
     }
 
     handleMash(key, anim) {
@@ -212,22 +219,55 @@ class WaterFight extends Phaser.Scene {
     }
 
     checkMashCount(anim) {
+        this.winshot = this.add.sprite(1500, 300, 'win').setScale(0.4)
+        this.winshotTween = this.tweens.add({
+            delay: 125,
+            targets: winshot,
+            x: 400,
+            ease: 'Linear',
+            duration: 300,
+            hold: 2000,
+            repeat: 0,
+            paused: true,
+            yoyo: true
+        })
+
+        this.loseshot = this.add.sprite(1500, 300, 'lose').setScale(0.4)
+        this.loseshotTween = this.tweens.add({
+            delay: 125,
+            targets: loseshot,
+            x: 400,
+            ease: 'Linear',
+            duration: 450,
+            hold: 2000,
+            repeat: 0,
+            paused: true,
+            yoyo: true
+        })
+
+
         if (this.currentKey) {
             this.input.keyboard.off('keydown-' + this.currentKey.keyCode, this.countMash, this)
         }
 
         if (this.mashCount >= this.target) {
             console.log("Yay, you did it!!")
+            this.sound.play('yay')
+            this.winshotTween.play()
+            this.mashCount = 0
             this.successCount++
         } else {
             console.log("You Lost :(((")
+            this.mashCount = 0
+            this.sound.play('ohno')
+            this.loseshotTween.restart()
         }
 
         if (this.successCount >= 4) {
             this.popupImage.setVisible(true)
             console.log("You won!") // Debugging message
         } else {
-            this.time.delayedCall(5000, this.pickRandomFunction, [], this)
+            this.time.delayedCall(4000, this.pickRandomFunction, [], this)
         }
     }
 

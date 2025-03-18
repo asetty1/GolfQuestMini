@@ -11,6 +11,11 @@ class WindmillFight extends Phaser.Scene {
         this.load.image('introbox', 'fighttextbox.png')
         this.load.image('success', 'success-textbox.png')
         this.load.image('aceandlina', 'acelinafight.png')
+        this.load.image('win', 'winshot.png')
+        this.load.image('lose', 'loseshot.png')
+
+        this.load.audio('yay', 'sound/win.wav')
+        this.load.audio('ohno', 'sound/lose.wav')
 
 
         this.load.spritesheet('windmill', 'spritesheet-windmill.png', {
@@ -20,28 +25,28 @@ class WindmillFight extends Phaser.Scene {
             endFrame: 3,
         })
 
-        this.load.spritesheet('xmash', 'xmash.png', {
+        this.load.spritesheet('xmash', 'buttons/xmash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
             endFrame: 1
         })
         
-        this.load.spritesheet('amash', 'amash.png', {
+        this.load.spritesheet('amash', 'buttons/amash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
             endFrame: 1
         })
 
-        this.load.spritesheet('tmash', 'tmash.png', {
+        this.load.spritesheet('tmash', 'buttons/tmash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
             endFrame: 1
         })
 
-        this.load.spritesheet('hmash', 'hmash.png', {
+        this.load.spritesheet('hmash', 'buttons/hmash.png', {
             frameWidth: 100,
             frameHeight: 80,
             startFrame: 0,
@@ -89,6 +94,8 @@ class WindmillFight extends Phaser.Scene {
             paused: true
         })
 
+        ///--------------------------------------------------
+
         // Create animations
         this.anims.create({
             key: 'xmash',
@@ -131,8 +138,8 @@ class WindmillFight extends Phaser.Scene {
         })
 
         this.mashCount = 0
-        this.target = 24
-        this.mashTimer = 3000
+        this.target = 20
+        this.mashTimer = 4000
         this.successCount = 0
 
         this.popupImage = this.add.sprite(400, 300, 'success').setVisible(false)
@@ -210,22 +217,54 @@ class WindmillFight extends Phaser.Scene {
     }
 
     checkMashCount(anim) {
+        this.winshot = this.add.sprite(1500, 300, 'win').setScale(0.4)
+        this.winshotTween = this.tweens.add({
+            delay: 125,
+            targets: this.winshot,
+            x: 400,
+            ease: 'Linear',
+            duration: 300,
+            hold: 2000,
+            repeat: 0,
+            paused: true,
+            yoyo: true
+        })
+
+        this.loseshot = this.add.sprite(1500, 300, 'lose').setScale(0.4)
+        this.loseshotTween = this.tweens.add({
+            delay: 125,
+            targets: this.loseshot,
+            x: 400,
+            ease: 'Linear',
+            duration: 450,
+            hold: 2000,
+            repeat: 0,
+            paused: true,
+            yoyo: true
+        })
+
+
         if (this.currentKey) {
             this.input.keyboard.off('keydown-' + this.currentKey.keyCode, this.countMash, this)
         }
 
         if (this.mashCount >= this.target) {
             console.log("Yay, you did it!!")
+            console.log("mash count: ", this.mashCount)
+            this.sound.play('yay')
+            this.winshotTween.play()
             this.successCount++
         } else {
             console.log("You Lost :(((")
+            this.sound.play('ohno')
+            this.loseshotTween.play()
         }
 
         if (this.successCount >= 4) {
             this.popupImage.setVisible(true)
             console.log("You won!") // Debugging message
         } else {
-            this.time.delayedCall(1000, this.pickRandomFunction, [], this)
+            this.time.delayedCall(4000, this.pickRandomFunction, [], this)
         }
     }
 
@@ -249,7 +288,10 @@ class WindmillFight extends Phaser.Scene {
 
     update() {
         if (this.successCount >= 4) {
-            if(Phaser.Input.Keyboard.KeyCodes.M) {
+            this.popupImage.setVisible(true)
+            console.log("You won!")
+
+            if(Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M))) {
                 this.scene.start("mapscene")
             }
         }

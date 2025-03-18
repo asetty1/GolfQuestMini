@@ -8,11 +8,24 @@ class Credits extends Phaser.Scene {
 
         this.load.image('bg', 'creditsbg.png')
         this.load.audio('writing', 'sound/writing.wav')
+        this.load.image('me', 'credits-textbox.png')
         this.load.audio('music', 'sound/cigarette-boat.wav')
+        this.load.audio('intro', '/sound/me.wav')
     }
 
     create() {
         this.add.image(0, 0, 'bg').setOrigin(0)
+        const thisisme = this.add.image(757/2, 460, 'me').setOrigin(0.5, 0.5).setAlpha(0)
+
+        this.keyC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
+        
+        this.meee = this.tweens.add({
+            targets: thisisme,
+            alpha: 1,
+            duration: 4000,
+            ease: 'Linear',
+            paused: true,
+        })
 
         this.keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
 
@@ -37,7 +50,8 @@ class Credits extends Phaser.Scene {
             'I used the fonts A Day Without Sun from Zetafont',
             'and Moon Flower by Denise Bentulan on Fontspace.',
             'For the code, I referenced in class coding examples as well as my old project code!',
-            'I hope you enjoy the game :)'
+            'I hope you enjoy the game :)',
+            'Press (M) to return back to the title screen!'
         ]
 
         // Call typewriteText for each line
@@ -66,6 +80,8 @@ class Credits extends Phaser.Scene {
                     if (lineIndex < lines.length) {
                         textObject = this.add.text(x, y + 30 * lineIndex, '', config).setOrigin(0.5)
                     } else {
+                        this.meee.play()
+                        this.sound.play('intro')
                         this.time.removeAllEvents()
                     }
                 }
@@ -81,6 +97,10 @@ class Credits extends Phaser.Scene {
     update() {
         if(Phaser.Input.Keyboard.JustDown(this.keyM)) {
             this.scene.start("titleScene")
+        }
+
+        if(Phaser.Input.Keyboard.JustDown(this.keyC)) {
+            this.scene.restart()
         }
     }
 }
