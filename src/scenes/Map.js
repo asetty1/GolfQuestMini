@@ -147,18 +147,11 @@ class Map extends Phaser.Scene {
                             .setOrigin(0.5, 0.5)
         this.creditsbox.setVisible(false);
 
-
-        // Listen for any keydown event
-        this.bgMusic = this.sound.add('bgmusic', { volume: 0.3, loop: true })
-        //this.instructions.setVisible(true)
-        this.input.keyboard.on('keydown', function () {
-            //this.instructions.setVisible(false)
-
-            if (!this.musicStarted) {
-                this.bgMusic.play()
-                this.musicStarted = true
-            }
-        }, this)
+        //poopoopeepeepoopoopeepee
+        if (!this.sound.get('bgmusic')) {
+            this.bgMusic = this.sound.add('bgmusic', { volume: 0.3, loop: true });
+            this.bgMusic.play();
+        }
 
         this.bossTheme = false
     }
