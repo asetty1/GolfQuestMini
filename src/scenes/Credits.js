@@ -6,7 +6,7 @@ class Credits extends Phaser.Scene {
     preload() {
         this.load.path = './assets/'
 
-        this.load.image('bg', 'creditsbg.png')
+        this.load.image('background', 'creditsbg.png')
         this.load.audio('writing', 'sound/writing.wav')
         this.load.image('me', 'credits-textbox.png')
         this.load.audio('music', 'sound/cigarette-boat.wav')
@@ -14,7 +14,7 @@ class Credits extends Phaser.Scene {
     }
 
     create() {
-        this.add.image(0, 0, 'bg').setOrigin(0)
+        this.add.image(0, 0, 'background').setOrigin(0)
         const thisisme = this.add.image(757/2, 460, 'me').setOrigin(0.5, 0.5).setAlpha(0)
 
         this.keyC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
@@ -96,10 +96,12 @@ class Credits extends Phaser.Scene {
 
     update() {
         if(Phaser.Input.Keyboard.JustDown(this.keyM)) {
+            this.sound.stopAll()
             this.scene.start("titleScene")
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.keyC)) {
+            this.sound.stopAll()
             this.scene.restart()
         }
     }
