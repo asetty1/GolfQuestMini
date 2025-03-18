@@ -131,7 +131,7 @@ class WindmillFight extends Phaser.Scene {
         })
 
         this.mashCount = 0
-        this.target = 2
+        this.target = 24
         this.mashTimer = 3000
         this.successCount = 0
 
@@ -225,7 +225,7 @@ class WindmillFight extends Phaser.Scene {
             this.popupImage.setVisible(true)
             console.log("You won!") // Debugging message
         } else {
-            this.time.delayedCall(5000, this.pickRandomFunction, [], this)
+            this.time.delayedCall(1000, this.pickRandomFunction, [], this)
         }
     }
 
@@ -236,6 +236,7 @@ class WindmillFight extends Phaser.Scene {
         }
     }
 
+    //this is just for console output
     getKeyCharacter(keyCode) {
         const keyMap = {
             88: 'X',

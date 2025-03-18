@@ -23,7 +23,7 @@ class Map extends Phaser.Scene {
 
         this.load.image('windfight', 'windmill-fight.png')
         this.load.image('waterfight', 'waterfountain-fight.png')
-        this.load.image('credits', 'credits-textbox')
+        this.load.image('credits', 'credits-textbox.png')
         this.load.image('instructions', 'instructions.png')
     }
 
@@ -127,19 +127,26 @@ class Map extends Phaser.Scene {
         this.windfight = this.add.image(textboxX, textboxY, 'windfight')
                             .setScrollFactor(0)
                             .setDepth(100)
-                            .setOrigin(0.5, 0.5); // center the sprite
+                            .setOrigin(0.5, 0.5)
         this.windfight.setVisible(false);
 
         this.waterfight = this.add.image(textboxX, textboxY, 'waterfight')
                             .setScrollFactor(0)
                             .setDepth(100)
-                            .setOrigin(0.5, 0.5); // center the sprite
+                            .setOrigin(0.5, 0.5)
         this.waterfight.setVisible(false);
 
         this.instructions = this.add.image(textboxX, textboxY, 'instructions')
                             .setScrollFactor(0)
                             .setDepth(100)
-                            .setOrigin(0.5, 0.5); // center the sprite
+                            .setOrigin(0.5, 0.5)
+
+        this.creditsbox = this.add.image(textboxX, textboxY, 'credits')
+                            .setScrollFactor(0)
+                            .setDepth(100)
+                            .setOrigin(0.5, 0.5)
+        this.creditsbox.setVisible(false);
+
 
         // Listen for any keydown event
         this.bgMusic = this.sound.add('bgmusic', { volume: 0.3, loop: true })
@@ -197,13 +204,20 @@ class Map extends Phaser.Scene {
                 this.scene.start("waterfountain")
             }
 
-        } else if (this.physics.overlap(this.ace, this.rectangle2)) {
+        } else if (this.physics.overlap(this.ace, this.lineB)) {
+            this.creditsbox.setVisible(true)
+            if(Phaser.Input.Keyboard.JustDown(this.keys.CKey)) {
+                this.scene.start("credits")
+            }
+
+        }else if (this.physics.overlap(this.ace, this.rectangle2)) {
              this.instructions.setVisible(true)
         
         } else {
             this.windfight.setVisible(false)
             this.waterfight.setVisible(false)
             this.instructions.setVisible(false)
+            this.creditsbox.setVisible(false)
 
             this.bossTheme = false
             this.bgMusic.setVolume(0.3)

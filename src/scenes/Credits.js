@@ -29,15 +29,19 @@ class Credits extends Phaser.Scene {
         }
 
         let textLines = [
-            'Into The Distance',
-            'Use the arrow keys to move!',
-            'Make sure to avoid the trees to keep riding.',
-            'Press an arrow key to start!',
-            'You have 60 seconds!'
+            'Hello! This is my recreation of the game Golf Quest Mini',
+            'shown on Steven Universe Season 1 Episode 19.',
+            'All art is done by me based on the concept art provided on the Steven Universe Wiki.',
+            'The background music you hear is Cigarette Boat by Marc Torch',
+            'and the other sound assets are through itch.io or made by me.',
+            'I used the fonts A Day Without Sun from Zetafont',
+            'and Moon Flower by Denise Bentulan on Fontspace.',
+            'For the code, I referenced in class coding examples as well as my old project code!',
+            'I hope you enjoy the game :)'
         ]
 
         // Call typewriteText for each line
-        this.typewriteTextLines(757 / 2, 640 / 5, textLines, menuConfig)
+        this.typewriteTextLines(757 / 2, 400 / 7, textLines, menuConfig)
     }
 
     typewriteTextLines(x, y, lines, config) {
@@ -60,7 +64,7 @@ class Credits extends Phaser.Scene {
                     displayText = ''
 
                     if (lineIndex < lines.length) {
-                        textObject = this.add.text(x, y + 64 * lineIndex, '', config).setOrigin(0.5)
+                        textObject = this.add.text(x, y + 30 * lineIndex, '', config).setOrigin(0.5)
                     } else {
                         this.time.removeAllEvents()
                     }
