@@ -21,6 +21,7 @@ class Map extends Phaser.Scene {
             endFrame: 1
         })
 
+        //textboxes
         this.load.image('windfight', 'windmill-fight.png')
         this.load.image('waterfight', 'waterfountain-fight.png')
         this.load.image('credits', 'credits-textbox.png')
@@ -58,7 +59,7 @@ class Map extends Phaser.Scene {
         this.lineA = lineA
         this.physics.add.existing(this.lineA, true)
 
-        //line b - boss #3
+        //line b - credits
         let lineB = this.add.rectangle(446, 176, 10, 45, 0xAF5F5D)
         this.lineB = lineB
         this.physics.add.existing(this.lineB, true)
@@ -174,7 +175,8 @@ class Map extends Phaser.Scene {
             if (!this.bossTheme) {
                 this.bossTheme = true
                 this.bgMusic.setVolume(0.1)
-                this.sound.play('overlap', {volume: 0.3, loop: false})
+                this.overlapSound = this.sound.add('overlap', { volume: 0.3, loop: false });
+                this.overlapSound.play()
             }
             
             if(Phaser.Input.Keyboard.JustDown(this.keys.FKey)) {
@@ -189,7 +191,8 @@ class Map extends Phaser.Scene {
             if (!this.bossTheme) {
                 this.bossTheme = true
                 this.bgMusic.setVolume(0.1)
-                this.sound.play('overlap', {volume: 0.3, loop: false})
+                this.overlapSound = this.sound.add('overlap', { volume: 0.3, loop: false });
+                this.overlapSound.play()
             }
 
             if(Phaser.Input.Keyboard.JustDown(this.keys.FKey)) {
@@ -211,6 +214,10 @@ class Map extends Phaser.Scene {
             this.waterfight.setVisible(false)
             this.instructions.setVisible(false)
             this.creditsbox.setVisible(false)
+
+            if (this.overlapSound && this.overlapSound.isPlaying) {
+                this.overlapSound.stop()
+            }
 
             this.bossTheme = false
             this.bgMusic.setVolume(0.3)
